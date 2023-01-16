@@ -1,3 +1,40 @@
+import { Day } from '../day'
+
+class Day2 extends Day {
+  constructor() {
+    super(2)
+  }
+
+  solveForPartOne(input: string): number {
+    return input.split('\n').reduce((sum, current) => {
+      try {
+        const choices = current.split(' ')
+        const myChoice = toChoice(choices[1])
+        sum +=
+          matchResultPart1(toChoice(choices[0]), myChoice) + myChoice.valueOf()
+      } catch (_error) {}
+      return sum
+    }, 0)
+  }
+
+  solveForPartTwo(input: string): number {
+    return input.split('\n').reduce((sum, current) => {
+      try {
+        const choices = current.split(' ')
+        const roundOutcome = toRoundOutcome(choices[1])
+        const myChoice: CHOICE = matchResultPart2(
+          toChoice(choices[0]),
+          toRoundOutcome(choices[1]),
+        )
+        sum += roundOutcome + myChoice.valueOf()
+      } catch (_error) {}
+      return sum
+    }, 0)
+  }
+}
+
+export { Day2 }
+
 export enum CHOICE {
   ROCK = 1, // A - X
   PAPER = 2, // B - Y
@@ -52,7 +89,7 @@ function matchResultPart1(them: CHOICE, me: CHOICE): RoundOutcome {
       [CHOICE.ROCK]: RoundOutcome.WIN,
       [CHOICE.PAPER]: RoundOutcome.DEFEAT,
       [CHOICE.SCISSORS]: RoundOutcome.DRAW,
-    }
+    },
   }
   return input[them][me]
 }
@@ -73,34 +110,7 @@ function matchResultPart2(them: CHOICE, me: RoundOutcome): CHOICE {
       [RoundOutcome.WIN]: CHOICE.ROCK,
       [RoundOutcome.DEFEAT]: CHOICE.PAPER,
       [RoundOutcome.DRAW]: CHOICE.SCISSORS,
-    }
+    },
   }
   return input[them][me]
-}
-
-export function part1(input: string): number {
-  return input.split('\n').reduce((sum, current) => {
-    try {
-      const choices = current.split(' ')
-      const myChoice = toChoice(choices[1]);
-      sum += matchResultPart1(toChoice(choices[0]), myChoice) + myChoice.valueOf()
-    } catch (_error) {
-    
-    }
-    return sum
-  }, 0)
-}
-
-export function part2(input: string): number {
-  return input.split('\n').reduce((sum, current) => {
-    try {
-      const choices = current.split(' ')
-      const roundOutcome = toRoundOutcome(choices[1])
-      const myChoice: CHOICE = matchResultPart2(toChoice(choices[0]), toRoundOutcome(choices[1]))
-      sum += roundOutcome + myChoice.valueOf()
-    } catch (_error) {
-    
-    }
-    return sum
-  }, 0)
 }
