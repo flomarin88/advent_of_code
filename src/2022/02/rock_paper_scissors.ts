@@ -23,7 +23,20 @@ function toChoice(value: string): CHOICE {
   throw new Error()
 }
 
-function matchResult(them: CHOICE, me: CHOICE): RoundOutcome {
+function toRoundOutcome(value: string): RoundOutcome {
+  switch (value) {
+    case 'X':
+      return RoundOutcome.DEFEAT
+    case 'Y':
+      return RoundOutcome.DRAW
+    case 'Z':
+      return RoundOutcome.WIN
+    default:
+      throw new Error()
+  }
+}
+
+function matchResultPart1(them: CHOICE, me: CHOICE): RoundOutcome {
   const input = {
     [CHOICE.ROCK]: {
       [CHOICE.ROCK]: RoundOutcome.DRAW,
@@ -44,11 +57,47 @@ function matchResult(them: CHOICE, me: CHOICE): RoundOutcome {
   return input[them][me]
 }
 
-export function rockPaperScissorsTotal(input: string): number {
+function matchResultPart2(them: CHOICE, me: RoundOutcome): CHOICE {
+  const input = {
+    [CHOICE.ROCK]: {
+      [RoundOutcome.DEFEAT]: CHOICE.SCISSORS,
+      [RoundOutcome.DRAW]: CHOICE.ROCK,
+      [RoundOutcome.WIN]: CHOICE.PAPER,
+    },
+    [CHOICE.PAPER]: {
+      [RoundOutcome.DEFEAT]: CHOICE.ROCK,
+      [RoundOutcome.DRAW]: CHOICE.PAPER,
+      [RoundOutcome.WIN]: CHOICE.SCISSORS,
+    },
+    [CHOICE.SCISSORS]: {
+      [RoundOutcome.WIN]: CHOICE.ROCK,
+      [RoundOutcome.DEFEAT]: CHOICE.PAPER,
+      [RoundOutcome.DRAW]: CHOICE.SCISSORS,
+    }
+  }
+  return input[them][me]
+}
+
+export function part1(input: string): number {
   return input.split('\n').reduce((sum, current) => {
     try {
       const choices = current.split(' ')
-      sum += matchResult(toChoice(choices[0]), toChoice(choices[1])) + toChoice(choices[1]).valueOf()
+      const myChoice = toChoice(choices[1]);
+      sum += matchResultPart1(toChoice(choices[0]), myChoice) + myChoice.valueOf()
+    } catch (_error) {
+    
+    }
+    return sum
+  }, 0)
+}
+
+export function part2(input: string): number {
+  return input.split('\n').reduce((sum, current) => {
+    try {
+      const choices = current.split(' ')
+      const roundOutcome = toRoundOutcome(choices[1])
+      const myChoice: CHOICE = matchResultPart2(toChoice(choices[0]), toRoundOutcome(choices[1]))
+      sum += roundOutcome + myChoice.valueOf()
     } catch (_error) {
     
     }
