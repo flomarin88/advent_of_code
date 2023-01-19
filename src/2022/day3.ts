@@ -16,7 +16,13 @@ export class Day3 extends Day {
   }
 
   solveForPartTwo(input: string): number {
-    return 0
+    const lines = input.split('\n')
+    const chunks = this.chunks(lines, 3)
+    
+    return chunks.reduce((sum, chunk) => {
+      sum += this.toNumber(this.letterInChunk(chunk))
+      return sum
+    }, 0)
   }
   
   sliceIntoEqualParts(input: string): string[] {
@@ -46,5 +52,38 @@ export class Day3 extends Day {
     else {
       return rawCode - 96
     }
+  }
+  
+  chunks(input: string[], linesPerChunk: number): string[][] {
+    return input.reduce((acc: string[][], currentLine, index) => {
+      const chunkIndex = Math.floor(index / linesPerChunk)
+      if (currentLine !== '') {
+        if (!acc[chunkIndex]) {
+          acc[chunkIndex] = []
+        }
+        acc[chunkIndex].push(currentLine)
+      }
+      return acc
+    }, [])
+  }
+  
+  letterInChunk(input: string[]): string {
+    const firstLineMap = Array.from(input[0]).reduce((acc, current) => {
+      acc.set(current, true)
+      return acc
+    }, new Map<string, boolean>())
+    
+    const secondLineMap = Array.from(input[1]).reduce((acc, current) => {
+      if (firstLineMap.has(current)) {
+        acc.set(current, true)
+      }
+      return acc
+    }, new Map<string, boolean>())
+    
+    const result = Array.from(input[2]).find(char => secondLineMap.has(char))
+    if (result) {
+      return result
+    }
+    throw new Error(`No letter found on line => ${input}`)
   }
 }
