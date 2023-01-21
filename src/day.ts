@@ -11,19 +11,19 @@ abstract class Day {
     return await readFile(`./resources/2022/day${this.id}.txt`)
   }
 
-  async partOne(): Promise<number> {
+  async partOne(): Promise<number | string> {
     const content = await this.getInputFile()
     return this.solveForPartOne(content.toString())
   }
 
-  abstract solveForPartOne(input: string): number
+  abstract solveForPartOne(input: string): number | string
 
-  async partTwo(): Promise<number> {
+  async partTwo(): Promise<number | string> {
     const content = await this.getInputFile()
     return this.solveForPartTwo(content.toString())
   }
 
-  abstract solveForPartTwo(input: string): number
+  abstract solveForPartTwo(input: string): number | string
 }
 
 export { Day }
