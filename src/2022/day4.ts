@@ -26,7 +26,14 @@ export class Day4 extends Day {
   }
 
   solveForPartTwo(input: string): number {
-    return 0
+    return input.split('\n').reduce((counter, line) => {
+      if (line !== '') {
+        const pair = this.extractPair(line)
+        counter += this.isPairOverlap(pair) ? 1 : 0
+      }
+      return counter
+    }, 0)
+  
   }
   
   // 5-6,4-8
@@ -46,11 +53,19 @@ export class Day4 extends Day {
     }
   }
   
+  isFullyIncluded(a: Range, b: Range): boolean {
+    return a.from >= b.from && a.to <= b.to
+  }
+  
+  isOverlap(a: Range, b: Range): boolean {
+    return a.to >= b.from && a.from <= b.to
+  }
+  
   isPairIncluded(pair: Pair): boolean {
     return this.isFullyIncluded(pair.left, pair.right) || this.isFullyIncluded(pair.right, pair.left)
   }
   
-  isFullyIncluded(a: Range, b: Range): boolean {
-    return a.from >= b.from && a.to <= b.to
+  isPairOverlap(pair: Pair): boolean {
+    return this.isOverlap(pair.left, pair.right) || this.isOverlap(pair.right, pair.left)
   }
 }
