@@ -4,8 +4,16 @@ import { Day2 } from './2022/day2'
 import { Day3 } from './2022/day3'
 import { Day4 } from './2022/day4'
 import { Day5 } from './2022/day5'
+import { Day6 } from './2022/day6'
 
-const days: Day[] = [new Day1(), new Day2(), new Day3(), new Day4(), new Day5()]
+const days: Day[] = [
+  new Day1(),
+  new Day2(),
+  new Day3(),
+  new Day4(),
+  new Day5(),
+  new Day6(),
+]
 
 async function run() {
   for (const day of days.reverse()) {
