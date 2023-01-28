@@ -62,7 +62,7 @@ describe('2022 - Day 03', () => {
         'PmmdzqPrVvPwwTWBwg\n' +
         'wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn\n' +
         'ttgJtRGJQctTZtZT\n' +
-        'CrZsJsPPZsGzwwsLwLmpwMDw\n'
+        'CrZsJsPPZsGzwwsLwLmpwMDw'
 
       const result = day.solveForPartTwo(input)
 

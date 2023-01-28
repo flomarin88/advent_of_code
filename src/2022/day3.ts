@@ -8,9 +8,7 @@ export class Day3 extends Day {
   solveForPartOne(input: string): number {
     const lines = input.split('\n')
     return lines.reduce((sum, currentLine) => {
-      if (currentLine !== '') {
-        sum += this.toNumber(this.letter(currentLine))
-      }
+      sum += this.toNumber(this.letter(currentLine))
       return sum
     }, 0)
   }
@@ -57,12 +55,10 @@ export class Day3 extends Day {
   chunks(input: string[], linesPerChunk: number): string[][] {
     return input.reduce((acc: string[][], currentLine, index) => {
       const chunkIndex = Math.floor(index / linesPerChunk)
-      if (currentLine !== '') {
-        if (!acc[chunkIndex]) {
-          acc[chunkIndex] = []
-        }
-        acc[chunkIndex].push(currentLine)
+      if (!acc[chunkIndex]) {
+        acc[chunkIndex] = []
       }
+      acc[chunkIndex].push(currentLine)
       return acc
     }, [])
   }

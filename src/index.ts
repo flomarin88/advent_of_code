@@ -7,6 +7,7 @@ import { Day5 } from './2022/day5'
 import { Day6 } from './2022/day6'
 import { Day7 } from './2022/day7'
 import { Day8 } from './2022/day8'
+import { Day9 } from './2022/day9'
 
 const days: Day[] = [
   new Day1(),
@@ -17,6 +18,7 @@ const days: Day[] = [
   new Day6(),
   new Day7(),
   new Day8(),
+  new Day9(),
 ]
 
 async function run() {
