@@ -1,44 +1,29 @@
 import { Day } from '../day'
 
 class Device {
-  private cycle: number
-  private signal: number
-  public snapshots: Map<number, number>
-  
-  constructor(private snapshotMoments: number[]) {
-    this.cycle = 0
-    this.signal = 1
-    this.snapshots = new Map<number, number>
+  private _cycle: number
+  private _signal: number
+
+  constructor() {
+    this._cycle = 0
+    this._signal = 1
   }
-  
-  snapshot(operation: number) {
-    if (this.snapshotMoments.length > 0) {
-      if (this.cycle + operation >= this.snapshotMoments[0]) {
-        const moment = this.snapshotMoments.shift()
-        if (moment) {
-          this.snapshots.set(moment, this.signal)
-        }
-      }
-    }
-  }
-  
+
   noop() {
-    this.snapshot(1)
-    this.cycle += 1
+    this._cycle += 1
   }
-  
+
   add(value: number) {
-    this.snapshot(2)
-    this.cycle += 2
-    this.signal += value
+    this._cycle += 2
+    this._signal += value
+  }
+
+  public get signal(): number {
+    return this._signal
   }
   
-  getSignalStrengths(): number {
-    let result = 0
-    this.snapshots.forEach((value: number, key: number) => {
-      result += value * key
-    });
-    return result
+  public get cycle(): number {
+    return this._cycle
   }
 }
 
@@ -48,21 +33,37 @@ export class Day10 extends Day {
   }
 
   solveForPartOne(input: string): number {
-    const device = new Device([20, 60, 100, 140, 180, 220])
+    const moments = [20, 60, 100, 140, 180, 220]
+    const device = new Device()
     const lines = input.split('\n')
-    lines.forEach(line => {
+
+    return lines.reduce((strenghts, line) => {
       if (line === 'noop') {
+        strenghts += this.snapshot(device, moments, 1)
         device.noop()
       } else {
         const split = line.split(' ')
+        strenghts += this.snapshot(device, moments, 2)
         device.add(Number(split[1]))
       }
-    })
-
-    return device.getSignalStrengths()
+      return strenghts
+    }, 0)
   }
 
   solveForPartTwo(input: string): number {
     return 0
   }
+  
+  snapshot(device: Device, moments: number[], operation: number): number {
+    if (moments.length > 0) {
+      if (device.cycle + operation >= moments[0]) {
+        const moment = moments.shift()
+        if (moment) {
+          return moment * device.signal
+        }
+      }
+    }
+    return 0
+  }
+  
 }
