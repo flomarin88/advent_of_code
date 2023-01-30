@@ -1,29 +1,54 @@
 import { Day } from '../day'
 
 class Device {
-  private _cycle: number
-  private _signal: number
+  private _cycle: number = 0
+  private _signal: number = 1
+  private _crt: string = ''
 
-  constructor() {
-    this._cycle = 0
-    this._signal = 1
-  }
+  constructor() {}
 
-  noop() {
+  incrementCycle() {
+    this.draw()
     this._cycle += 1
+  }
+  
+  noop() {
+    this.incrementCycle()
   }
 
   add(value: number) {
-    this._cycle += 2
+    this.incrementCycle()
+    this.incrementCycle()
     this._signal += value
   }
 
   public get signal(): number {
     return this._signal
   }
-  
+
   public get cycle(): number {
     return this._cycle
+  }
+  
+  public get crt(): string {
+    const result = this._crt.match(/.{1,40}/g)
+    if (result) {
+      return result?.join('\n')
+    }
+    return ''
+  }
+
+  spritePositions(): [number, number, number] {
+    return [this._signal - 1, this._signal, this._signal + 1]
+  }
+  
+  draw()  {
+    if (this.spritePositions().includes(this._cycle % 40)) {
+      this._crt += '#'
+    }
+    else {
+      this._crt += '.'
+    }
   }
 }
 
@@ -37,23 +62,33 @@ export class Day10 extends Day {
     const device = new Device()
     const lines = input.split('\n')
 
-    return lines.reduce((strenghts, line) => {
+    return lines.reduce((strengths, line) => {
       if (line === 'noop') {
-        strenghts += this.snapshot(device, moments, 1)
+        strengths += this.snapshot(device, moments, 1)
         device.noop()
       } else {
         const split = line.split(' ')
-        strenghts += this.snapshot(device, moments, 2)
+        strengths += this.snapshot(device, moments, 2)
         device.add(Number(split[1]))
       }
-      return strenghts
+      return strengths
     }, 0)
   }
 
-  solveForPartTwo(input: string): number {
-    return 0
+  solveForPartTwo(input: string): string {
+    const device = new Device()
+    const lines = input.split('\n')
+    lines.forEach(line => {
+      if (line === 'noop') {
+        device.noop()
+      } else {
+        const split = line.split(' ')
+        device.add(Number(split[1]))
+      }
+    })
+    return device.crt
   }
-  
+
   snapshot(device: Device, moments: number[], operation: number): number {
     if (moments.length > 0) {
       if (device.cycle + operation >= moments[0]) {
@@ -65,5 +100,4 @@ export class Day10 extends Day {
     }
     return 0
   }
-  
 }
