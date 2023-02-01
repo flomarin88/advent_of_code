@@ -6,21 +6,55 @@ interface ThrowOptions {
   false: number
 }
 
+interface Thrown {
+  monkeyId: number
+  item: number
+}
+
 class Monkey {
   public id: number = 0
   public items: number[] = []
   public operation: (old: number) => number
   public throwOptions: ThrowOptions
+  public inspectionCounter: number = 0
 
   constructor() {
-    this.operation = (old => { return old })
-    this.throwOptions = { divisibleBy: 1, true: 0, false: 0}
+    this.operation = (old) => {
+      return old
+    }
+    this.throwOptions = { divisibleBy: 1, true: 0, false: 0 }
   }
 
-  bored() {}
+  round(): Thrown[] {
+    const result = this.items.map((item) => {
+      this.inspectionCounter++
+      return this.inspectAndThrow(item)
+    })
+    this.items = []
+    return result
+  }
+
+  private inspectAndThrow(item: number): Thrown {
+    const newWorryLevel = this.getsBored(this.operation(item))
+    return {
+      monkeyId:
+        newWorryLevel % this.throwOptions.divisibleBy === 0
+          ? this.throwOptions.true
+          : this.throwOptions.false,
+      item: newWorryLevel,
+    }
+  }
+
+  private getsBored(item: number): number {
+    return Math.floor(item / 3)
+  }
 
   public received(item: number) {
     this.items.push(item)
+  }
+  
+  toString(): string {
+    return `Monkey ${this.id}: ${this.items.join(', ')}`
   }
 }
 
@@ -47,7 +81,7 @@ export class Day11 extends Day {
     super(11)
   }
 
-  initMonkeys(input: string): Map<number, Monkey> {
+  initMonkeys(input: string): Monkey[] {
     const monkeyLines = input.split('\n\n')
     return monkeyLines.reduce((monkeys, lines) => {
       const monkey = lines.split('\n').reduce((monkey, line) => {
@@ -73,30 +107,51 @@ export class Day11 extends Day {
           }
         }
         if (line.includes('Test')) {
-          monkey.throwOptions.divisibleBy = Number(line.split('  Test: divisible by ')[1])
+          monkey.throwOptions.divisibleBy = Number(
+            line.split('  Test: divisible by ')[1],
+          )
         }
         if (line.includes('If true')) {
-          monkey.throwOptions.true = Number(line.split('    If true: throw to monkey')[1])
+          monkey.throwOptions.true = Number(
+            line.split('    If true: throw to monkey')[1],
+          )
         }
         if (line.includes('If false')) {
-          monkey.throwOptions.false = Number(line.split('    If false: throw to monkey')[1])
+          monkey.throwOptions.false = Number(
+            line.split('    If false: throw to monkey')[1],
+          )
         }
         return monkey
       }, new Monkey())
-      monkeys.set(monkey.id, monkey)
+      monkeys.push(monkey)
       return monkeys
-    }, new Map<number, Monkey>())
+    }, new Array<Monkey>())
   }
 
   solveForPartOne(input: string): number {
     const monkeys = this.initMonkeys(input)
     for (let round = 1; round <= 20; round++) {
-      
+      for (const monkey of monkeys) {
+        const throws = monkey.round()
+        for (const throwItem of throws) {
+          monkeys[throwItem.monkeyId].received(throwItem.item)
+        }
+      }
+      // console.log(`End of Round ${round}`)
+      // console.log(this.toString(monkeys))
     }
-    return 0
+    const bestTwoInspectors = monkeys
+      .map(monkey => monkey.inspectionCounter)
+      .sort((a, b) => b - a)
+      .slice(0, 2)
+    return bestTwoInspectors[0] * bestTwoInspectors[1]
   }
 
   solveForPartTwo(input: string): number {
     return 0
+  }
+  
+  toString(monkeys: Monkey[]): string {
+    return monkeys.map(monkey => monkey.toString()).join('\n')
   }
 }
