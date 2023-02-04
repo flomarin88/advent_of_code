@@ -3,7 +3,7 @@ import * as assert from 'assert'
 
 describe('2022 - Day 11', () => {
   const day = new Day11()
-
+  
   const input =
     'Monkey 0:\n' +
     '  Starting items: 79, 98\n' +
@@ -38,6 +38,14 @@ describe('2022 - Day 11', () => {
       const result = day.solveForPartOne(input)
 
       assert.equal(result, 10605)
+    })
+  })
+  
+  describe('Part 2', () => {
+    it('sums the number of items investigated by the top 2 monkeys', () => {
+      const result = day.solveForPartTwo(input)
+      
+      assert.equal(result, 2713310158)
     })
   })
 })

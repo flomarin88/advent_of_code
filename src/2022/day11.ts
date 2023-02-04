@@ -17,6 +17,7 @@ class Monkey {
   public operation: (old: number) => number
   public throwOptions: ThrowOptions
   public inspectionCounter: number = 0
+  public allDivisors: number = 1
 
   constructor() {
     this.operation = (old) => {
@@ -25,17 +26,18 @@ class Monkey {
     this.throwOptions = { divisibleBy: 1, true: 0, false: 0 }
   }
 
-  round(): Thrown[] {
+  round(relief: boolean): Thrown[] {
     const result = this.items.map((item) => {
       this.inspectionCounter++
-      return this.inspectAndThrow(item)
+      return this.inspectAndThrow(item, relief)
     })
     this.items = []
     return result
   }
 
-  private inspectAndThrow(item: number): Thrown {
-    const newWorryLevel = this.getsBored(this.operation(item))
+  private inspectAndThrow(item: number, relief: boolean): Thrown {
+    const afterOperation = this.operation(item)
+    const newWorryLevel = relief ? Monkey.getsBored(afterOperation) : afterOperation % this.allDivisors
     return {
       monkeyId:
         newWorryLevel % this.throwOptions.divisibleBy === 0
@@ -45,7 +47,7 @@ class Monkey {
     }
   }
 
-  private getsBored(item: number): number {
+  private static getsBored(item: number): number {
     return Math.floor(item / 3)
   }
 
@@ -83,7 +85,7 @@ export class Day11 extends Day {
 
   initMonkeys(input: string): Monkey[] {
     const monkeyLines = input.split('\n\n')
-    return monkeyLines.reduce((monkeys, lines) => {
+    const monkeys = monkeyLines.reduce((monkeys, lines) => {
       const monkey = lines.split('\n').reduce((monkey, line) => {
         const id = line.match(/Monkey (\d+):/)
         if (id) {
@@ -126,19 +128,21 @@ export class Day11 extends Day {
       monkeys.push(monkey)
       return monkeys
     }, new Array<Monkey>())
+    
+    const allDivisors = monkeys.reduce((modulo, monkey) => modulo * monkey.throwOptions.divisibleBy, 1)
+    monkeys.forEach(monkey => monkey.allDivisors = allDivisors)
+    return monkeys
   }
 
-  solveForPartOne(input: string): number {
+  private solve(input: string, rounds: number, relief: boolean) {
     const monkeys = this.initMonkeys(input)
-    for (let round = 1; round <= 20; round++) {
+    for (let round = 1; round <= rounds; round++) {
       for (const monkey of monkeys) {
-        const throws = monkey.round()
+        const throws = monkey.round(relief)
         for (const throwItem of throws) {
           monkeys[throwItem.monkeyId].received(throwItem.item)
         }
       }
-      // console.log(`End of Round ${round}`)
-      // console.log(this.toString(monkeys))
     }
     const bestTwoInspectors = monkeys
       .map(monkey => monkey.inspectionCounter)
@@ -146,9 +150,13 @@ export class Day11 extends Day {
       .slice(0, 2)
     return bestTwoInspectors[0] * bestTwoInspectors[1]
   }
+  
+  solveForPartOne(input: string): number {
+    return this.solve(input, 20, true)
+  }
 
   solveForPartTwo(input: string): number {
-    return 0
+    return this.solve(input, 10000, false)
   }
   
   toString(monkeys: Monkey[]): string {
