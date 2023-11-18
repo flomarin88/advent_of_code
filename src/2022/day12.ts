@@ -38,11 +38,10 @@ export class Day12 extends Day {
       .filter((l) => l !== '')
       .map((line) => Array.from(line))
   
-    // const start = this.getPosition(matrix, 'S')
     const starts = this.findAllStartingPoints(matrix)
     const end = this.getPosition(matrix, 'E')
   
-    let distance: number = 0
+    let distance: number = Number.MAX_VALUE
     starts.forEach(start => {
       const result = this.bfs(matrix, start, end)
       if (result < distance) {
@@ -75,7 +74,7 @@ export class Day12 extends Day {
     const queue: PointWithDistance[] = [{...start, distance: 0}] 
     const visited: Point[] = [start]
     
-    let distance = 0
+    let distance = Number.MAX_VALUE
     let current = queue.shift()
     while (current) {
       const letter = matrix[current.x][current.y] === 'S' ? 'a' : matrix[current.x][current.y]
@@ -91,7 +90,6 @@ export class Day12 extends Day {
             }
             if (nextPoint.x === end.x && nextPoint.y === end.y) {
               distance = nextPoint.distance
-              console.log(distance)
             }
           }
         }
@@ -108,7 +106,14 @@ export class Day12 extends Day {
   }
   
   private findAllStartingPoints(matrix: string[][]): Point[] {
-    
-    return []
+    const points: Point[] = []
+    for (let row = 0; row < matrix.length; row++) {
+      for (let col = 0; col < matrix[row].length; col++) {
+        if (['a', 'S'].includes(matrix[row][col])) {
+          points.push({ x: row, y: col} )
+        }
+      }
+    }
+    return points
   }
 }
