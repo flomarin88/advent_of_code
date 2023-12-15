@@ -1,5 +1,11 @@
 import { Day } from '../day'
 
+enum Order {
+  OK,
+  KO,
+  NEXT
+}
+
 export class Day13 extends Day {
   constructor() {
     super(13)
@@ -12,4 +18,9 @@ export class Day13 extends Day {
   solveForPartTwo(input: string): number {
     return 0;
   }
+  
+  compare(left: number, right: number): Order {
+    return Order.OK
+  }
+    
 }
