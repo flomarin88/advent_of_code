@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc --build",
     "lint": "tsc --noEmit && eslint \\\"**/*.ts\\\" --quiet --fix",
-    "serve": "ts-node ./src",
-    "start": "node dist",
+    "2022": "ts-node ./src/2022",
+    "2023": "ts-node ./src/2023",
     "test": "mocha -r ts-node/register **/test/**/*.test.ts"
   },
   "repository": {
