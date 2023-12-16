@@ -67,7 +67,7 @@ class RopeGame {
 
 export class Day9 extends Day {
   constructor() {
-    super(9)
+    super(2022, 9)
   }
 
   solveForPartOne(input: string): number {

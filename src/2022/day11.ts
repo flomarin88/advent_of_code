@@ -80,7 +80,7 @@ function square(): (old: number) => number {
 
 export class Day11 extends Day {
   constructor() {
-    super(11)
+    super(2022, 11)
   }
 
   initMonkeys(input: string): Monkey[] {

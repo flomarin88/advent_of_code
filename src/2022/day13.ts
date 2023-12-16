@@ -8,7 +8,7 @@ enum Order {
 
 export class Day13 extends Day {
   constructor() {
-    super(13)
+    super(2022, 13)
   }
   
   solveForPartOne(input: string): number {

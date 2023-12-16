@@ -12,7 +12,7 @@ interface MoveDescription {
 
 export class Day5 extends Day {
   constructor() {
-    super(5)
+    super(2022, 5)
   }
 
   solveForPartOne(input: string): string {

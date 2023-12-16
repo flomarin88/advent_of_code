@@ -54,7 +54,7 @@ class Device {
 
 export class Day10 extends Day {
   constructor() {
-    super(10)
+    super(2022, 10)
   }
 
   solveForPartOne(input: string): number {

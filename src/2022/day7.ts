@@ -74,7 +74,7 @@ export class Day7 extends Day {
   private currentFolder: Folder = this.root
 
   constructor() {
-    super(7)
+    super(2022, 7)
   }
 
   solveForPartOne(input: string): number {

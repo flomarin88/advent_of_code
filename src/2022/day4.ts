@@ -12,7 +12,7 @@ interface Range {
 
 export class Day4 extends Day {
   constructor() {
-    super(4)
+    super(2022, 4)
   }
 
   solveForPartOne(input: string): number {

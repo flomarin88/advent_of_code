@@ -2,7 +2,7 @@ import { Day } from '../day'
 
 export class Day8 extends Day {
   constructor() {
-    super(8)
+    super(2022, 8)
   }
   
   solveForPartOne(input: string): number {

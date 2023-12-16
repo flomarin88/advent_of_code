@@ -1,14 +1,16 @@
 import { readFile } from 'fs/promises'
 
 abstract class Day {
+  year: number
   id: number
 
-  protected constructor(id: number) {
+  protected constructor(year: number, id: number) {
+    this.year = year
     this.id = id
   }
 
   private async getInputFile(): Promise<string> {
-    const data = await readFile(`./resources/2022/day${this.id}.txt`)
+    const data = await readFile(`./resources/${this.year}/day${this.id}.txt`)
     const lines = data.toString().split('\n')
     const lastLine = lines.pop()
     if (lastLine === '') {
