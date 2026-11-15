@@ -1,0 +1,1 @@
+{"ts":"2026-11-15T15:48:46.584Z","hook":"garde-bash","decision":"bloquer","raison":"abandonne toutes les modifications du répertoire","segment":"git checkout -q .","session":"a1144eb8-a5aa-4e3c-9ffa-169ee96d5c57"}

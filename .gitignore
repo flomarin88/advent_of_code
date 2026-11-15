@@ -2,3 +2,8 @@
 .DS_Store
 node_modules
 dist
+.env
+# Inputs AoC : ne pas publier (sauf historique 2022/2023 déjà commité)
+/resources/*
+!/resources/2022/
+!/resources/2023/
